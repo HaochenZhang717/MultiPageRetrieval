@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
     for finetune_epoch in [2]:
         # encode_path = f"./embeds_1110-embed128-lr1e-4-r32-Epoch{finetune_epoch}"
-        encode_path = f"./embeds_ckpts_embed128-lr1e-4-r64-size1280-temperature0.05-Epoch{finetune_epoch}"
+        encode_path = f"/root/tianyi/MMDocIR_embeds/embeds_ckpts_embed128-lr1e-4-r64-size1280-temperature0.05-Epoch{finetune_epoch}"
 
         encoded_query, query_indices = load_pickle(f"{encode_path}/encoded_queries.pkl")
 
@@ -88,8 +88,7 @@ if __name__ == "__main__":
                 # page_vecs_pad, masks_page = pad_tok_len(page_vecs)
                 # scores_page = colbert_score(query_vec, page_vecs_pad, masks_page)
                 # gt_list[query_id]["scores_page"] = scores_page.tolist()
-
-        out_path = f"./embeds_ckpts_embed128-lr1e-4-r64-size1280-temperature0.05-Epoch{finetune_epoch}/doc_avg_pool_embeddings.pkl"
+        out_path = f"/root/tianyi/MMDocIR_embeds/embeds_ckpts_embed128-lr1e-4-r64-size1280-temperature0.05-Epoch{finetune_epoch}/doc_avg_pool_embeddings.pkl"
         with open(out_path, "wb") as f:
             pickle.dump(doc_avg_pool_list, f)
 
