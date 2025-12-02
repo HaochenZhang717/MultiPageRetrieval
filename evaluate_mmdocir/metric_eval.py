@@ -250,8 +250,6 @@ def evaluate_page(data_json, model_name="", topk="", metric=""):
     return result
 
 
-
-
 def evaluate_doc(data_json, model_name="", topk="", metric=""):
     total_count = 0
     total_score = {"precision": 0, "recall": 0, "ndcg": 0, "map": 0, "mrr": 0}

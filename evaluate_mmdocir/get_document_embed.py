@@ -50,12 +50,20 @@ if __name__ == "__main__":
         # if "layout" in encode:
         #     encoded_layout, layout_indices = load_pickle(f"{encode_path}/encoded_layout_{model}.pkl")
 
+        updated_annotations = []
         gt_list = []
         for line in open("./MMDocIRDataset/evaluate_dataset/MMDocIR_annotations.jsonl", 'r', encoding="utf-8"):
             item = json.loads(line.strip())
+            updated_annotations.append(item)
             for qa in item["questions"]:
                 qa["domain"] = item["domain"]
                 gt_list.append(qa)
+
+
+        with open("./MMDocIRDataset/evaluate_dataset/MMDocIR_annotations_w_docID.jsonl", "w", encoding="utf-8") as f:
+            for item in updated_annotations:
+                f.write(json.dumps(item, ensure_ascii=False) + "\n")
+
 
         if len(gt_list) != len(query_indices):
             raise ValueError("number of indexed question do not match ground-truth")
@@ -96,12 +104,13 @@ if __name__ == "__main__":
 
 
         for gt_item, (query_id, start_pid, end_pid, start_lid, end_lid)  in zip(updated_gt_list, query_indices):
-            print(gt_item.keys())
+            # print(gt_item.keys())
             gt_item.update({'doc_id':[start_end_ids[(start_pid, end_pid)]]})
 
         with open("./MMDocIRDataset/evaluate_dataset/questions_w_docID.jsonl", "w", encoding="utf-8") as f:
             for item in updated_gt_list:
                 f.write(json.dumps(item, ensure_ascii=False) + "\n")
+
 
         # if "page" in encode:
         #     evaluate_page(gt_list, model_name=f"Epoch{finetune_epoch}", topk=1, metric="recall")
