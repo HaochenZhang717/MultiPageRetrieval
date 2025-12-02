@@ -60,19 +60,21 @@ def retrieve_page(encode_path, gt_list):
         candidate_pages = []
         for candidate_doc in candidate_docs:
             start, end = mmdocir_annotations[candidate_doc]["page_indices"]
+            # mmdocir_annotations[70]["page_indices"]
+            # mmdocir_annotations[62]["page_indices"]
             candidate_pages.extend(range(start, end + 1))
-        breakpoint()
         page_vecs = encoded_page[candidate_pages].float().numpy()
         page_vecs_pad, masks_page = pad_tok_len(page_vecs)
 
         # after this, update the "page_id" in gt_list
-        gt_list[query_id]['global_page_id'] = gt_list[query_id]['page_id'] + start_pid - 1
-        print(f"candidate pages: {candidate_pages}")
-        breakpoint()
-        if gt_list[query_id]['global_page_id'] in candidate_pages:
-            gt_list[query_id]["page_id"] = candidate_pages.index(gt_list[query_id]['global_page_id'])
-        else:
-            gt_list[query_id]["page_id"] = -1
+        gt_list[query_id]['global_page_id'] = [a + start_pid - 1 for a in gt_list[query_id]['page_id']]
+        # print(f"candidate pages: {candidate_pages}")
+
+        for i, each_global_page_id in enumerate(gt_list[query_id]['global_page_id']):
+            if each_global_page_id in candidate_pages:
+                gt_list[query_id]["page_id"][i] = candidate_pages.index(each_global_page_id)
+            else:
+                gt_list[query_id]["page_id"][i] = -1
 
         scores_page = colbert_score(query_vec, page_vecs_pad, masks_page, use_gpu=True)
         gt_list[query_id]["scores_page"] = scores_page.tolist()
