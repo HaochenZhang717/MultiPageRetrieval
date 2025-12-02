@@ -97,7 +97,7 @@ if __name__ == "__main__":
 
         for gt_item, (query_id, start_pid, end_pid, start_lid, end_lid)  in zip(updated_gt_list, query_indices):
             print(gt_item.keys())
-            gt_item.update({'doc_id':start_end_ids[(start_pid, end_pid)]})
+            gt_item.update({'doc_id':[start_end_ids[(start_pid, end_pid)]]})
 
         with open("./MMDocIRDataset/evaluate_dataset/questions_w_docID.jsonl", "w", encoding="utf-8") as f:
             for item in updated_gt_list:

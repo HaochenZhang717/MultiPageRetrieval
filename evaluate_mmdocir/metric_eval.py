@@ -266,7 +266,6 @@ def evaluate_doc(data_json, model_name="", topk="", metric=""):
         doc_id = qa["doc_id"]
 
         scores = top_k_indices(qa["scores_doc"], topk)
-        breakpoint()
         total_score["precision"] += precision(scores, doc_id)
         total_score["recall"] += recall(scores, doc_id)
         total_score["ndcg"] += ndcg(scores, doc_id)
