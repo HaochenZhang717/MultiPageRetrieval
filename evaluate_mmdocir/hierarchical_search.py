@@ -92,4 +92,4 @@ def main(topk_doc):
 
 
 if __name__ == "__main__":
-    main()
+    main(2)
