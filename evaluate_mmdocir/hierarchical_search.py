@@ -37,9 +37,9 @@ def retrieve_document(topk, encode_path):
         gt_list[query_id]["scores_doc"] = scores_document.tolist()
         gt_list[query_id]["topk_docs"] = top_k_indices(gt_list[query_id]["scores_doc"], topk)
 
-    evaluate_doc(gt_list, model_name=f"Document Retrieval", topk=1, metric="recall")
-    evaluate_doc(gt_list, model_name=f"Document Retrieval", topk=3, metric="recall")
-    evaluate_doc(gt_list, model_name=f"Document Retrieval", topk=5, metric="recall")
+    # evaluate_doc(gt_list, model_name=f"Document Retrieval", topk=1, metric="recall")
+    # evaluate_doc(gt_list, model_name=f"Document Retrieval", topk=3, metric="recall")
+    # evaluate_doc(gt_list, model_name=f"Document Retrieval", topk=5, metric="recall")
 
     return gt_list
 
@@ -98,4 +98,5 @@ def main(topk_doc):
 
 
 if __name__ == "__main__":
-    main(2)
+    for i in [2, 5, 10, 20]:
+        main(i)
