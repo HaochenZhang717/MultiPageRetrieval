@@ -37,6 +37,10 @@ def retrieve_document(topk, encode_path):
         gt_list[query_id]["scores_doc"] = scores_document.tolist()
         gt_list[query_id]["topk_docs"] = top_k_indices(gt_list[query_id]["scores_doc"], topk)
 
+    evaluate_doc(gt_list, model_name=f"Document Retrieval", topk=1, metric="recall")
+    evaluate_doc(gt_list, model_name=f"Document Retrieval", topk=3, metric="recall")
+    evaluate_doc(gt_list, model_name=f"Document Retrieval", topk=5, metric="recall")
+
     return gt_list
 
 
@@ -80,9 +84,9 @@ def retrieve_page(encode_path, gt_list):
         gt_list[query_id]["scores_page"] = scores_page.tolist()
 
 
-        evaluate_page(gt_list, model_name=f"||", topk=1, metric="recall")
-        evaluate_page(gt_list, model_name=f"||", topk=3, metric="recall")
-        evaluate_page(gt_list, model_name=f"||", topk=5, metric="recall")
+    evaluate_page(gt_list, model_name=f"||", topk=1, metric="recall")
+    evaluate_page(gt_list, model_name=f"||", topk=3, metric="recall")
+    evaluate_page(gt_list, model_name=f"||", topk=5, metric="recall")
 
 def main(topk_doc):
     print(f"Hierarchical Retrieval with {topk_doc} documents...")
