@@ -18,7 +18,7 @@ def load_pickle(file_in):
         return pickle.load(fq)
 
 
-def retrieve_document(topk, encode_path):
+def retrieve_document(topk, encode_path, document_embed_type):
     # encode_path = f"/root/tianyi/MMDocIR_embeds/embeds_ckpts_embed128-lr1e-4-r64-size1280-temperature0.05-Epoch{finetune_epoch}"
     encoded_query, query_indices = load_pickle(f"{encode_path}/encoded_queries.pkl")
     encoded_document = load_pickle(f"{encode_path}/doc_avg_pool_embeddings.pkl")
@@ -30,8 +30,10 @@ def retrieve_document(topk, encode_path):
     for (query_id, start_pid, end_pid, start_lid, end_lid) in tqdm(query_indices):
         query_vec = encoded_query[query_id]
         query_vec = query_vec.squeeze(0).float().numpy()
-        document_vecs = [enc['avg_page_embed'] for enc in encoded_document]
-        document_vecs = np.stack(document_vecs, axis=0)
+        assert document_embed_type in encoded_document[0].keys()
+        # document_vecs = [enc['avg_page_embed'] for enc in encoded_document]
+        document_vecs = [enc[document_embed_type] for enc in encoded_document]
+        # document_vecs = np.stack(document_vecs, axis=0)
         document_vecs_pad, masks_document = pad_tok_len(document_vecs)
         scores_document = colbert_score(query_vec, document_vecs_pad, masks_document, use_gpu=True)
         gt_list[query_id]["scores_doc"] = scores_document.tolist()
@@ -88,15 +90,16 @@ def retrieve_page(encode_path, gt_list):
     evaluate_page(gt_list, model_name=f"||", topk=3, metric="recall")
     evaluate_page(gt_list, model_name=f"||", topk=5, metric="recall")
 
-def main(topk_doc):
+def main(topk_doc, document_embed_type):
+    assert document_embed_type in ["avg_page_embed", "cat_page_embed"]
     print(f"Hierarchical Retrieval with {topk_doc} documents...")
     finetune_epoch = 2
     encode_path = f"/root/tianyi/MMDocIR_embeds/embeds_ckpts_embed128-lr1e-4-r64-size1280-temperature0.05-Epoch{finetune_epoch}"
-    updated_gt_list = retrieve_document(topk=topk_doc, encode_path=encode_path)
+    updated_gt_list = retrieve_document(topk=topk_doc, encode_path=encode_path, document_embed_type=document_embed_type)
     retrieve_page(encode_path=encode_path, gt_list=updated_gt_list)
 
 
 
 if __name__ == "__main__":
     for i in [2, 5, 10, 20]:
-        main(i)
+        main(i, document_embed_type="cat_page_embed")

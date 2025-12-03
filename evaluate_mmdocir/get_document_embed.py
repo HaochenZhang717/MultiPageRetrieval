@@ -89,6 +89,7 @@ if __name__ == "__main__":
                     "start_pid": start_pid,
                     "end_pid": end_pid,
                     "avg_page_embed": average_page_vec,  # convert to list for JSON compatibility
+                    "cat_page_embed": page_vecs,
                 })
                 start_end_ids.update({(start_pid, end_pid): doc_id})
                 doc_id += 1
