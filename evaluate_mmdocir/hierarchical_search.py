@@ -34,6 +34,7 @@ def retrieve_document(topk, encode_path, document_embed_type):
         # document_vecs = [enc['avg_page_embed'] for enc in encoded_document]
         document_vecs = [enc[document_embed_type] for enc in encoded_document]
         # document_vecs = np.stack(document_vecs, axis=0)
+        breakpoint()
         document_vecs_pad, masks_document = pad_tok_len(document_vecs)
         scores_document = colbert_score(query_vec, document_vecs_pad, masks_document, use_gpu=True)
         gt_list[query_id]["scores_doc"] = scores_document.tolist()
