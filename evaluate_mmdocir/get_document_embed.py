@@ -83,13 +83,12 @@ if __name__ == "__main__":
             if "page" in encode:
                 page_vecs = encoded_page[start_pid:end_pid + 1].float().numpy()
                 average_page_vec = np.mean(page_vecs, axis=0)
-
                 doc_avg_pool_list.append({
                     "doc_index": doc_id,
                     "start_pid": start_pid,
                     "end_pid": end_pid,
                     "avg_page_embed": average_page_vec,  # convert to list for JSON compatibility
-                    "cat_page_embed": page_vecs,
+                    "cat_page_embed": page_vecs
                 })
                 start_end_ids.update({(start_pid, end_pid): doc_id})
                 doc_id += 1
